@@ -10,8 +10,7 @@ public class ifDemo {
         System.out.println("请输入伤害值X");
         int X =sc.nextInt();
         hp -= X;
-        if(hp<1)
-        {
+        if(hp<1) {
             hp=1;
             System.out.println("触发锁血被动\n");
         }
@@ -21,8 +20,7 @@ public class ifDemo {
         System.out.println("请输入恢复值Y");
         int Y =sc.nextInt();
         hp += Y;
-        if(hp>200)
-        {
+        if(hp>200) {
             hp=200;
         }
         System.out.println("最终人物血量为：" + hp);
