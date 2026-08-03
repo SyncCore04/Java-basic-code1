@@ -12,7 +12,6 @@ public class ForDemo1 {
             b=c;
             System.out.print(c);
             System.out.print(i==target-1?"\n":",");
-
         }
     }
 }
