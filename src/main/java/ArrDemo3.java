@@ -27,5 +27,25 @@ public class ArrDemo3 {
         for ( i = 0; i < arr.length; i++) {
             System.out.print(arr[i]+" ");
         }
+    // 2.快慢指针
+        int[] arr2={1,1,2,2,2,2,3,3,3,3};
+        int slow=0;
+        int fast=1;
+
+        while (fast<arr2.length) {
+            if(arr2[slow]!=arr2[fast]) {
+                slow++;
+                arr2[slow]=arr2[fast];
+            }
+            fast++;
+        }
+
+        System.out.println();
+
+        for (i = 0; i <= slow; i++) {
+            System.out.print(arr2[i]+" ");
+        }
+
     }
+
 }
