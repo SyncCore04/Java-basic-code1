@@ -1,3 +1,5 @@
+package basic;
+
 public class MultiplicationTable {
     public static void main(String[] args) {
         /*需求：输出乘法口诀表*/

@@ -1,3 +1,5 @@
+package basic;
+
 public class TimeConvert {
     public static void main(String[] args) {
         /*时间转换为时分秒格式，例如：3661秒转换为1小时1分1秒。*/

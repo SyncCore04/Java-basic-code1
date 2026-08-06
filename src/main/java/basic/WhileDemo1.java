@@ -1,3 +1,5 @@
+package basic;
+
 public class WhileDemo1 {
     public static void main(String[] args) {
         /*100000元存银行，复利1.7%,需要多少年可以实现本金翻倍*/

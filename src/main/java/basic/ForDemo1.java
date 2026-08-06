@@ -1,3 +1,5 @@
+package basic;
+
 public class ForDemo1 {
     public static void main(String[] args) {
         /*有一组特殊的数字，从第三项开始，每一项都是前两项的数字和，请问第10项的数字是多少？

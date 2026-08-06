@@ -1,3 +1,5 @@
+package basic;
+
 public class ForDemo2 {
     public static void main(String[] args) {
         /*100以内偶数和*/

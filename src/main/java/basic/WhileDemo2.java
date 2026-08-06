@@ -1,3 +1,5 @@
+package basic;
+
 public class WhileDemo2 {
     public static void main(String[] args) {
         /*需求：世界最高山峰珠穆朗玛峰高度是：8848.86米=8848860毫米，
