@@ -65,3 +65,41 @@ public static double getSum(int a,double b){}
 3. 返回类型是String，**不能参与算术运算，仅用于输出展示**
 4. 对比：printf直接控制台输出；format得到字符串对象
 > 案例：[MethodPractice01.java第34行](/src/main/java/method/MethodPractice01.java)
+
+
+## 快慢指针
+### 核心思想
+- **快指针(fast)**：负责遍历数组，筛选符合条件的元素
+- **慢指针(slow)**：负责记录有效元素存放的下标位置
+- 原地修改数组，**不创建新数组**，节省内存
+
+### 执行逻辑
+1. fast逐个扫描全部元素
+2. 满足条件 → 将`nums[fast]`赋值给`nums[slow]`，`slow++`
+3. 不满足条件 → fast继续前进，直接跳过
+4. 最终`slow`的值 = 有效元素个数
+
+### ⚠️关键注意点
+1. 数组**物理长度不会改变**，只是把有效数据搬运到数组头部
+2. 数组后半段会残留旧数据，**只读取前slow个元素**
+3. 返回值为slow，不是数组length
+
+### 典型题目
+- 移除元素
+- 删除有序数组重复项
+
+```java
+//模板
+public static int getslow(int[] nums) {
+    int slow = 0;
+    for (int fast = 0; fast < nums.length; fast++) {
+        if (符合条件) {
+            nums[slow] = nums[fast];
+            slow++;
+        }
+    }
+    return slow;
+}
+```
+**练习案例:**
+[RemoveElement.java](/src/main/java/algorithm/RemoveElement.java)
