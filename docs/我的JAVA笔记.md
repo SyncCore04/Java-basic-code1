@@ -103,3 +103,27 @@ public static int getslow(int[] nums) {
 ```
 **练习案例:**
 [RemoveElement.java](/src/main/java/algorithm/RemoveElement.java)
+
+
+## Java编码规范
+### 命名
+1. 类/接口：大驼峰，首字母大写 `LuckyMoney`；public类文件名与类名大小写完全一致
+2. 方法/变量：小驼峰，首字母小写 `splitRedPacket`
+3. 包名：全部小写 `algorithm`
+4. 常量：全大写，下划线分隔 `MAX_MONEY`
+
+### 格式
+1. 左大括号跟在行尾，不要单独换行
+2. if、for、while，即使一行代码也尽量带上{}
+3. 运算符两侧加空格；IDEA快捷键：Ctrl+Alt+L自动格式化代码
+
+### 语法硬性规则
+1. 方法不能嵌套，方法写在类内部，不能写在另一个方法里面
+2. 有返回值的方法，必须return对应数据；void只能写return;
+3. 局部变量必须初始化之后才能使用
+4. 数组：数组名.length（无括号）；字符串str.length()（带括号）
+
+### 习惯写法
+1. boolean判断直接写`if(flag)`，不要写`if(flag==true)`
+2. 整数除法会舍弃小数，涉及金额避免直接int相除
+3. 字符串内容对比使用`.equals()`，不使用`==`
