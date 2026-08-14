@@ -7,6 +7,7 @@
 - [快慢指针算法](#快慢指针)
 - [Java编码规范](#java编码规范)
 - [算法题集](#算法题集)
+- [面向对象](#面向对象)
 
 ---
 ## 数组遍历
@@ -253,3 +254,39 @@ LeetCode 42.接雨水
 #### 和预处理数组版本对比
 预处理数组：直观易懂，空间O(n)，适合入门理解原理
 双指针版本：空间最优，逻辑更抽象，面试优先写法
+
+## 面向对象
+### ooptest5 Student实体类 & Get/Set 封装练习
+>传送门：
+>
+>实体类:[Student.java](/src/main/java/oop/ooptest5/Student.java)
+>测试类:[Test.java](/src/main/java/oop/ooptest5/Test.java)
+
+#### 涉及知识点
+1. 封装：private私有成员变量，外部无法直接访问
+2. set/get 方法作用
+   - setXxx()：修改私有属性值，无返回值，携带参数
+   - getXxx()：读取私有属性值，有返回值，无参数
+   
+3. this关键字：区分局部参数与成员变量 `this.name = name`
+
+#### 代码示例说明
+Student类将name/age/height/weight私有化，外部Test不能直接`s1.name`；
+只能通过get获取、set修改对象数据。
+
+##### 两种数值修改区别
+1. `s1.setWeight(s1.getWeight()+5)`
+   调用set修改对象内部真实属性，对象数据永久变化
+2. `int newWeight = s1.getWeight()+5`
+   仅读取值计算存入临时变量，**不会改变对象本身属性**
+
+#### 核心this用法
+setName方法中 `this.name = name`
+- 等号右侧name：方法传入的局部形参
+- this.name：当前Student对象的成员变量
+  this代表当前实例对象，用来重名变量区分。
+
+#### 易错点
+1. private修饰的字段，类外直接访问编译报错；
+2. 只写get不写set：属性只读，无法修改；只写set不写get：属性无法读取；
+3. 不用this会出现局部变量覆盖成员变量，赋值失效。
