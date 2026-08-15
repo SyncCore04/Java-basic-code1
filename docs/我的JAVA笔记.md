@@ -290,3 +290,59 @@ setName方法中 `this.name = name`
 1. private修饰的字段，类外直接访问编译报错；
 2. 只写get不写set：属性只读，无法修改；只写set不写get：属性无法读取；
 3. 不用this会出现局部变量覆盖成员变量，赋值失效。
+
+## 面向对象-构造方法 & JavaBean综合练习
+>案例1：ooptest6
+实体:[Student.java](/src/main/java/oop/ooptest6/Student.java)
+测试类:[Test.java](/src/main/java/oop/ooptest6/Test.java)
+>案例2：opptest7
+实体:[Student.java](/src/main/java/oop/opptest7/Student.java)
+测试类:[Test.java](/src/main/java/oop/opptest7/Test.java)
+
+### 一、构造方法核心知识点
+1. 构造方法特征
+- 方法名与类名完全一致，无返回值（不能写void）
+- 创建对象new时自动执行，用于初始化成员变量
+- 支持重载：一个类可同时存在无参、全参构造，靠参数列表区分
+
+2. 两条关键规则
+- 类中不手写任何构造，编译器自动赠送**默认无参构造**
+- 只要手动写任意带参构造，默认无参构造直接消失；想要无参创建对象，必须手动写出空参构造
+
+3. 两种常用构造（标准JavaBean强制要求）
+- 空参构造：`new Student()`，对象创建后可通过set方法赋值
+- 全参构造：`new Student("张三",18,"男",180)`，创建对象时直接一次性赋值全部属性
+
+4. 执行区分
+- 空参创建对象：成员变量默认值为null/0，后续用set修改属性
+- 全参创建对象：构造内通过this给成员变量直接赋值，初始化完成即拥有完整数据
+
+### 二、标准JavaBean完整规范（本次案例统一遵循）
+1. 所有成员变量使用private私有化，外部无法直接访问
+2. 手动提供**无参构造 + 全参构造**两套构造方法
+3. 每个私有属性配套getXxx()、setXxx()方法
+4. 可额外添加类自身业务行为方法（如study、eat、sleep）
+
+### 三、this关键字在构造/set中的作用
+1. set方法内 `this.name = name`
+   形参与成员变量重名，`this.变量`代表当前对象的成员变量，无this则只会给局部形参赋值
+2. 构造方法仅负责初始化属性，不做复杂业务逻辑
+
+### 四、两种对象赋值使用场景对比
+1. 空参构造 + set方法
+   适合：对象属性需要分步修改、中途变更数据
+```java
+Student s = new Student();
+s.setName("张三");
+s.setAge(18);
+```
+2. 全参构造直接赋值
+   适合：创建对象时属性值一次性确定，无需后续修改
+```java
+Student s2=new Student("李四",20);
+```
+### 五、易错点总结
+1. 写了带参构造后，直接 new Student () 会编译报错，缺少无参构造
+2. private 字段外部不能直接s.name访问，只能通过 get/set
+3. 构造方法不能手动调用，仅 new 对象时自动触发
+4. 不加 this 会出现局部变量覆盖成员变量，赋值失效
