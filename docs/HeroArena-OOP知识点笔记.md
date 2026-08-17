@@ -1,7 +1,7 @@
 # HeroArena 项目知识点笔记（OOP 初学者版）
 
 > 本笔记基于 HeroArena（英雄竞技场）小项目，逐点讲解 Java 面向对象核心知识。
-> 建议配合源码一起看，源码传送门：[HeroArena 项目源码](src/main/java/com/heroarena/GameController.java)
+> 建议配合源码一起看，源码传送门：[HeroArena 项目源码](../src/main/java/com/heroarena/GameController.java)
 
 ---
 
