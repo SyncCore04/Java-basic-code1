@@ -8,6 +8,7 @@
 - [Java编码规范](#java编码规范)
 - [算法题集](#算法题集)
 - [面向对象](#面向对象)
+- [final 关键字](#final-关键字)
 
 ---
 ## 数组遍历
@@ -453,3 +454,128 @@ public class Circle {
 2. ❌ **final 成员变量不初始化**——不赋值直接编译报错
 3. ❌ **给 final 变量写 setter**——写了也没用，调用赋值时会报错
 4. 💡 **常量建议加 static**——`static final` 才是真正的全局常量，所有对象共享一份，节省内存
+
+---
+
+## 枚举（enum）
+
+### 什么是枚举
+
+枚举是一种**特殊的类**，用于表示一组**固定的常量**。
+
+**适用场景：** 一个变量的取值只有有限几种可能时。
+- 订单状态：待支付、处理中、已发货、配送中、已送达、已取消
+- 星期：周一到周日
+- 季节：春夏秋冬
+- 性别：男、女
+
+> 💡 用枚举比用 `int` 或 `String` 常量更安全：编译器会检查值是否合法，不会出现"传了个 99 代表未知状态"的问题。
+
+---
+
+### 枚举的定义
+
+```java
+public enum OderState {
+    PAYMENT_PENDING,   // 待支付
+    PROCESSING,        // 处理中
+    SHIPPED,           // 已发货
+    OUT_FOR_DELIVERY,  // 配送中
+    DELIVERED,         // 已送达
+    CANCELLED          // 已取消
+}
+```
+
+**使用：**
+```java
+OderState o1 = OderState.PAYMENT_PENDING;
+```
+
+> 案例：[OderState.java](/src/main/java/oopadvanced/enumtest/OderState.java)
+
+---
+
+### 枚举的构造方法
+
+枚举可以带属性，每个枚举常量可以携带额外信息。
+
+```java
+public enum OderState {
+    // 每个常量后面跟括号，调用构造方法传参
+    PAYMENT_PENDING("待支付"),
+    PROCESSING("处理中"),
+    SHIPPED("已发货"),
+    OUT_FOR_DELIVERY("配送中"),
+    DELIVERED("已送达"),
+    CANCELLED("已取消");  // 最后一个常量后面要加分号
+
+    private String name;  // 枚举的属性
+
+    // 构造方法必须是 private（不写默认也是 private）
+    private OderState(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+```
+
+**使用：**
+```java
+System.out.println(OderState.PAYMENT_PENDING.getName());  // 输出：待支付
+```
+
+---
+
+### 枚举配合switch使用
+
+枚举是 switch 的最佳搭档，Java 14+ 支持箭头写法，更简洁。
+
+```java
+OderState o1 = OderState.PAYMENT_PENDING;
+
+switch (o1) {
+    case PAYMENT_PENDING -> System.out.println("待支付状态");
+    case PROCESSING -> System.out.println("处理中状态");
+    case SHIPPED -> System.out.println("已发货状态");
+    case OUT_FOR_DELIVERY -> System.out.println("配送中状态");
+    case DELIVERED -> System.out.println("已送达状态");
+    case CANCELLED -> System.out.println("已取消状态");
+    default -> System.out.println("未知状态");
+}
+```
+
+> ⚠️ switch 的 case 后面直接写枚举常量名，**不能加枚举类名前缀**（写 `OderState.PAYMENT_PENDING` 会报错）。
+
+> 案例：[EnumTest1.java](/src/main/java/oopadvanced/enumtest/EnumTest1.java)
+
+---
+
+### 枚举的常用方法
+
+| 方法 | 作用 | 示例 |
+|------|------|------|
+| `values()` | 返回所有枚举常量的数组 | `OderState[] states = OderState.values();` |
+| `valueOf(String name)` | 根据字符串转成枚举常量 | `OderState s = OderState.valueOf("SHIPPED");` |
+| `ordinal()` | 返回枚举常量的序号（从0开始） | `OderState.SHIPPED.ordinal()` → 2 |
+| `name()` | 返回枚举常量的名字（字符串） | `OderState.SHIPPED.name()` → "SHIPPED" |
+
+```java
+// 遍历所有枚举常量
+for (OderState state : OderState.values()) {
+    System.out.println(state.ordinal() + " - " + state.getName());
+}
+```
+
+---
+
+### 易错点汇总
+
+1. ❌ **枚举常量最后一个后面忘记加分号**——如果枚举有属性和方法，最后一个常量后面必须写 `;`
+2. ❌ **构造方法写成 public**——枚举构造方法默认且必须是 `private`，不能外部 new
+3. ❌ **switch 的 case 加类名前缀**——写 `case OderState.SHIPPED` 报错，直接写 `case SHIPPED`
+4. ❌ **用 ordinal() 做业务判断**——序号依赖定义顺序，以后加新常量可能错位，建议用 name() 或自定义属性
+5. 💡 **枚举不能被继承**——枚举默认 final，不能 extends 其他类，也不能被其他类继承
+6. 💡 **枚举可以实现接口**——虽然不能继承类，但可以 implements 接口
