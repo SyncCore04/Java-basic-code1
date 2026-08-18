@@ -346,3 +346,110 @@ Student s2=new Student("李四",20);
 2. private 字段外部不能直接s.name访问，只能通过 get/set
 3. 构造方法不能手动调用，仅 new 对象时自动触发
 4. 不加 this 会出现局部变量覆盖成员变量，赋值失效
+
+---
+
+## final 关键字
+
+### final修饰基本类型变量
+
+#### 核心特点
+1. ✅ 必须在定义时赋值
+2. ❌ 赋值后不能重新修改
+
+```java
+final int NUM = 100;
+//NUM = 200;  // 编译报错，不能被重新赋值
+System.out.println(NUM + 100);
+```
+
+> 案例：[FinalTest.java](/src/main/java/oopadvanced/finaltest/FinalTest.java)
+
+---
+
+### final修饰引用类型变量
+
+#### ⚠️ 核心难点
+final 修饰的是**变量中存储的地址值**，地址不能变，但**对象内部的属性值可以改变**。
+
+```java
+final Student STU = new Student("张三", 18);
+
+//STU = new Student("李四", 20);  // 错误，不能重新赋值（改地址）
+
+STU.setName("李四");  // 正确，对象内部属性可以改
+STU.setAge(20);
+```
+
+#### 内存图解
+```
+栈内存                     堆内存
+───────                    ───────
+STU [0x001]  ──────────>  Student对象
+(final，地址锁死)           name: "张三" → "李四"
+                           age: 18 → 20
+```
+
+> 💡 记忆口诀：**final 管的是"引用指向谁"，不管"指向的对象内部变不变"。**
+
+> 案例：[FinalTest.java](/src/main/java/oopadvanced/finaltest/FinalTest.java)、[Student.java](/src/main/java/oopadvanced/finaltest/Student.java)
+
+---
+
+### final修饰成员变量
+
+#### 核心规则
+1. ✅ 必须在定义时直接赋值（或在构造方法中赋值）
+2. ❌ 没有 setter 方法（因为不能改）
+3. 💡 通常配合 `static` 成为全局常量
+
+#### Circle 类实战
+> 定义一个圆，属性：半径（可变）和圆周率（不可变），方法：计算面积和周长
+
+```java
+public class Circle {
+    private final double PI = 3.14;  // final 修饰，定义时赋值
+    private double radius;           // 普通变量，可修改
+
+    // 没有 setPI() 方法，只有 getPI()
+    public double getPI() {
+        return PI;
+    }
+
+    public double getArea() {
+        return PI * radius * radius;
+    }
+
+    public double getPerimeter() {
+        return 2 * PI * radius;
+    }
+}
+```
+
+#### ⚠️ 易错点
+```java
+//public void setPI(double PI) {
+//    this.PI = PI;  // 错误，final 变量不能重新赋值
+//}
+```
+
+> 案例：[Circle.java](/src/main/java/oopadvanced/finaltest/Circle.java)、[FinalTest2.java](/src/main/java/oopadvanced/finaltest/FinalTest2.java)
+
+---
+
+### 命名规范
+
+| 类型 | 规范 | 示例 |
+|------|------|------|
+| final 常量 | 全大写，下划线分隔 | `NUM`、`MAX_VALUE` |
+| final 对象引用 | 习惯全大写 | `STU` |
+| 普通成员变量 | 小驼峰 | `radius`、`name` |
+
+---
+
+### 易错点汇总
+
+1. ❌ **以为 final 修饰对象后整个对象都不能动**——其实只是不能换对象，内部属性随便改
+2. ❌ **final 成员变量不初始化**——不赋值直接编译报错
+3. ❌ **给 final 变量写 setter**——写了也没用，调用赋值时会报错
+4. 💡 **常量建议加 static**——`static final` 才是真正的全局常量，所有对象共享一份，节省内存
