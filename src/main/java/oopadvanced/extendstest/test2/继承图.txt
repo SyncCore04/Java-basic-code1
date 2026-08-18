@@ -1,0 +1,15 @@
+智能设备（SmartDevice）
+├── 属性：品牌(brand)、价格(price)
+│
+├── 手机（Phone）
+│   ├── 行为：打电话(call)、发短信(sendMessage)
+│   │
+│   ├── 安卓手机（AndroidPhone）
+│   │   └── 行为：NFC功能(nfc)
+│   │
+│   └── 苹果手机（IPhone）
+│       └── （暂无特有属性/行为）
+│
+└── 笔记本电脑（Laptop）
+    ├── 属性：品牌(brand)、价格(price)（继承自父类）
+    └── 行为：编程(code)
