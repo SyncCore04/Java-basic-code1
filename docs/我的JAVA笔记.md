@@ -9,6 +9,7 @@
 - [算法题集](#算法题集)
 - [面向对象](#面向对象)
 - [final 关键字](#final-关键字)
+- [枚举类](#枚举（enum）)
 
 ---
 ## 数组遍历
@@ -579,3 +580,101 @@ for (OderState state : OderState.values()) {
 4. ❌ **用 ordinal() 做业务判断**——序号依赖定义顺序，以后加新常量可能错位，建议用 name() 或自定义属性
 5. 💡 **枚举不能被继承**——枚举默认 final，不能 extends 其他类，也不能被其他类继承
 6. 💡 **枚举可以实现接口**——虽然不能继承类，但可以 implements 接口
+
+---
+
+## 继承（extends）
+
+### 核心思想
+子类继承父类后，**自动拥有**父类的属性和方法，不用重复写。父类放共有内容，子类放特有内容。
+
+```java
+public class Person {          // 父类
+    String name;
+    int age;
+    public void eat() { ... }
+}
+
+public class Student extends Person {  // 子类继承父类
+    String grade;             // 子类特有属性
+    public void study() { ... }
+}
+```
+
+> 案例：[test1](src/main/java/oopadvanced/extendstest/test1/Person.java)（Person → Student/Teacher）
+
+### 继承的特点
+1. ✅ 子类可以直接用父类的属性和方法
+2. ✅ 支持**多层继承**：A → B → C（如：第一代手机 → 第二代 → 第三代）
+3. ❌ Java **只支持单继承**：一个类只能 extends 一个父类，不能 `class A extends B, C`
+4. ❌ 子类不能继承父类的**构造方法**（但可以通过 `super()` 调用）
+
+> 案例：[test4](src/main/java/oopadvanced/extendstest/test4/ThirdGenerationPhone.java)（三代手机多层继承）
+
+### 方法重写（Override）
+子类对父类的方法**重新实现**，运行时用子类的版本。
+
+```java
+// 父类
+public void call() {
+    System.out.println("打电话");
+}
+
+// 子类重写
+@Override
+public void call() {
+    System.out.println("打视频");
+}
+```
+
+**重写要求：**
+- 方法名、参数列表必须和父类**完全相同**
+- 返回值类型不能大于父类（基本类型必须相同，引用类型可以是子类）
+- 访问权限不能比父类更严格（父类 public，子类不能 protected）
+
+> 💡 `@Override` 注解必加，写错方法名时编译器会报错提醒。
+
+> 案例：[test4](src/main/java/oopadvanced/extendstest/test4/ThirdGenerationPhone.java)（call 重写为打视频）、[test5](src/main/java/oopadvanced/extendstest/test5/Phone.java)（重写 calculatePrice 用 super 再打折）
+
+### super 关键字
+| 用法 | 含义 |
+|------|------|
+| `super.属性名` | 访问父类的成员变量 |
+| `super.方法名()` | 调用父类的成员方法 |
+| `super(...)` | 调用父类构造方法，必须写在子类构造方法**第一行** |
+
+```java
+// 重写时调用父类原方法，再追加逻辑
+@Override
+public double calculatePrice() {
+    return super.calculatePrice() * 0.9;  // 先按父类规则打折，再额外9折
+}
+```
+
+### this 和 super 的区别
+| | this | super |
+|---|------|-------|
+| 代表 | 当前对象的引用 | 父类对象的引用 |
+| 访问属性 | 本类成员变量 | 父类成员变量 |
+| 访问方法 | 本类成员方法 | 父类成员方法 |
+| 构造方法 | `this(...)` 调用本类其他构造 | `super(...)` 调用父类构造 |
+
+### 变量访问就近原则
+当局部变量、本类成员变量、父类成员变量同名时，按以下顺序查找：
+
+```java
+System.out.println(name);       // 1. 局部变量
+System.out.println(this.name);  // 2. 本类成员变量
+System.out.println(super.name); // 3. 父类成员变量
+```
+
+> 案例：[test3](src/main/java/oopadvanced/extendstest/test3/Test.java)（三层同名变量验证）
+
+### 易错点汇总
+1. ❌ **重写和重载搞混**——重写（Override）在子类中，参数列表相同；重载（Overload）在同类中，参数列表不同
+2. ❌ **重写时改了参数列表**——参数列表不同就变成重载了，不是重写
+3. ❌ **`super()` 没写在第一行**——子类构造方法中 `super(...)` 必须是第一条语句
+4. ❌ **以为子类构造方法会继承**——构造方法不能被继承，子类只能通过 `super()` 调用
+5. 💡 **子类构造方法默认第一行有 `super()`**——如果你没写，编译器会自动加一个无参的 `super()`
+6. 💡 **重写时用 `super.方法名()` 可以复用父类逻辑**——不用把父类代码再抄一遍
+
