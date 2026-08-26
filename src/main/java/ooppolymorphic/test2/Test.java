@@ -20,6 +20,21 @@ public class Test {
 
         //f.ziShow();
         //多态的弊端，无法调用子类的特有方法
+
+        //解决多态的问题：
+        //强制类型转换
+        Zi zi=(Zi)f;
+        zi.ziShow();
+
+        Ye y= new Fu();
+        if(y instanceof Fu){
+            Fu ff=(Fu)y;
+            ff.fuShow();
+        }else {
+            System.out.println("类型错误");
+        }
+
+
     }
 
 }

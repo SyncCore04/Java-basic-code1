@@ -1,6 +1,6 @@
 package ooppolymorphic.test2;
 
-public class Fu {
+public class Fu extends Ye{
     String name="fu";
 
     public void fuShow(){
