@@ -11,7 +11,7 @@
 - [final 关键字](#final-关键字)
 - [枚举类](#枚举enum)
 - [继承](#继承extends)
-
+- [多态](#多态)
 
 ---
 ## 数组遍历
@@ -679,3 +679,114 @@ System.out.println(super.name); // 3. 父类成员变量
 4. ❌ **以为子类构造方法会继承**——构造方法不能被继承，子类只能通过 `super()` 调用
 5. 💡 **子类构造方法默认第一行有 `super()`**——如果你没写，编译器会自动加一个无参的 `super()`
 6. 💡 **重写时用 `super.方法名()` 可以复用父类逻辑**——不用把父类代码再抄一遍
+
+---
+
+## 多态
+
+### 什么是多态
+**父类引用指向子类对象，调用方法时自动执行子类的版本。**
+
+```java
+User user = new Student("张三", "zhangsan", "123456");
+user.work();  // 执行的是 Student 的 work()，不是 User 的
+```
+
+> 案例：[test1](../src/main/java/ooppolymorphic/test1/StudentManagementSystem.java)（学生管理系统 register 方法接收所有角色）
+
+### 多态的前提条件
+1. ✅ 必须有**继承关系**（子类 extends 父类）
+2. ✅ 必须有**方法重写**（子类重写父类方法）
+3. ✅ **父类引用指向子类对象**（`父类 变量名 = new 子类();`）
+
+### 多态的访问特点 ⭐ 核心
+
+| 访问内容 | 规则 | 记忆口诀 |
+|---------|------|---------|
+| **成员变量** | 编译看左边，运行看左边 | 变量看左边 |
+| **成员方法** | 编译看左边，运行看右边 | 方法看右边 |
+
+```java
+Fu f = new Zi();
+System.out.println(f.name);  // 变量：看左边 Fu，输出 "fu"
+f.show();                     // 方法：看右边 Zi，输出 "zi类的重写方法"
+```
+
+> 💡 为什么变量看左边？因为成员变量不存在重写，父子类同名变量是两个独立的变量，引用类型决定访问哪个。
+>
+> 案例：[test2](../src/main/java/ooppolymorphic/test2/Test.java)（Ye→Fu→Zi 三层继承验证访问特点）
+
+### 多态的弊端
+**父类引用不能调用子类特有的方法。**
+
+```java
+Fu f = new Zi();
+// f.ziShow();  // 编译报错，Fu 类中没有 ziShow 方法
+```
+
+### 向下转型（解决多态弊端）
+把父类引用**强制转换**回子类类型，就能调用子类特有方法。
+
+```java
+Fu f = new Zi();
+Zi z = (Zi) f;     // 向下转型，强制转换
+z.ziShow();        // 现在可以调用子类特有方法了
+```
+
+> ⚠️ 向下转型有风险：如果实际对象不是目标类型，运行时会抛 `ClassCastException`。
+
+### instanceof 关键字
+**判断对象是否属于某个类型**，转型前先判断，避免类型转换异常。
+
+```java
+if (f instanceof Zi) {
+    Zi z = (Zi) f;   // 确认是 Zi 类型再转，安全
+    z.ziShow();
+} else {
+    System.out.println("类型不匹配，不能转换");
+}
+```
+
+> 案例：[test3](../src/main/java/ooppolymorphic/test3/Person.java)（drive 方法中用 instanceof 判断 Car/Bicycle，再调用特有方法 honk/ringBell）
+
+### 多态的应用场景
+
+#### 场景一：方法参数用父类类型
+一个方法能接收所有子类对象，无需为每个子类写重载。
+
+```java
+// 一个方法搞定所有交通工具
+public void drive(Vehicle vehicle) {
+    vehicle.move();  // 传 Car 就执行 Car.move()，传 Bicycle 就执行 Bicycle.move()
+}
+
+// 调用时可以传任意子类
+p.drive(new Car("奔驰", 100));
+p.drive(new Bicycle("TREK", 15));
+```
+
+#### 场景二：集合统一存储不同子类
+```java
+ArrayList<User> userList = new ArrayList<>();
+userList.add(new Student(...));   // 存学生
+userList.add(new Teacher(...));   // 存老师
+userList.add(new Admin(...));     // 存管理员
+```
+
+### 向上转型 vs 向下转型
+
+| | 向上转型 | 向下转型 |
+|---|---------|---------|
+| 写法 | `Fu f = new Zi();` | `Zi z = (Zi) f;` |
+| 方向 | 子类 → 父类 | 父类 → 子类 |
+| 是否自动 | ✅ 自动，无需强转 | ❌ 需要强制类型转换 |
+| 是否安全 | ✅ 一定安全 | ⚠️ 可能抛 ClassCastException |
+| 能调用什么 | 父类方法 + 重写的方法 | 父类 + 子类所有方法 |
+
+### 易错点汇总
+1. ❌ **以为成员变量也有多态**——变量看左边，只有方法才看右边
+2. ❌ **向下转型不判断类型**——直接强转可能抛 `ClassCastException`，转型前用 `instanceof` 判断
+3. ❌ **把没有继承关系的类强转**——比如 `String s = (String) new Object()`，编译就报错
+4. ❌ **多态下调用子类特有方法**——父类引用看不到子类特有方法，必须先向下转型
+5. 💡 **多态的本质是"同一接口，不同实现"**——调用方只关心父类接口，不关心具体是哪个子类
+6. 💡 **开发中多态用得最多的地方是方法参数**——参数写父类/接口类型，调用时传任意实现类
