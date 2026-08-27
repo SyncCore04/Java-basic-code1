@@ -12,6 +12,7 @@
 - [枚举类](#枚举enum)
 - [继承](#继承extends)
 - [多态](#多态)
+- [抽象类](#抽象类abstract)
 
 ---
 ## 数组遍历
@@ -790,3 +791,103 @@ userList.add(new Admin(...));     // 存管理员
 4. ❌ **多态下调用子类特有方法**——父类引用看不到子类特有方法，必须先向下转型
 5. 💡 **多态的本质是"同一接口，不同实现"**——调用方只关心父类接口，不关心具体是哪个子类
 6. 💡 **开发中多态用得最多的地方是方法参数**——参数写父类/接口类型，调用时传任意实现类
+
+---
+
+## 抽象类（abstract）
+
+### 什么是抽象类
+抽象类是**半成品模板**，不能直接 `new` 对象。它定义"子类必须做什么"，但不规定"怎么做"。
+
+```java
+public abstract class Shape {
+    public abstract double getPerimeter();  // 抽象方法，只有声明，没有方法体
+    public abstract double getArea();
+    public abstract String getType();
+}
+```
+
+> 案例：[practice1](src/main/java/ooppolymorphic/practice1/Shape.java)（图形抽象类，Circle/Rectangle 继承实现）
+
+### 抽象方法
+用 `abstract` 修饰，**只有方法声明，没有方法体**（直接分号结尾）。
+
+```java
+public abstract void eat();  // 正确，抽象方法
+// public abstract void eat() {}  // 错误，抽象方法不能有方法体
+```
+
+### 抽象类的规则
+1. ❌ 抽象类不能 `new` 对象（`new Shape()` 会报错）
+2. ✅ 包含抽象方法的类**必须**声明为 `abstract`
+3. ✅ 抽象类里可以有**普通方法、属性、构造方法**（不要求全是抽象的）
+4. ✅ 子类继承抽象类后，**必须实现所有抽象方法**，否则子类也得是抽象类
+
+```java
+// Animal 抽象类：有属性、有普通方法、有抽象方法
+public abstract class Animal {
+    private String name;          // 普通属性
+    public abstract void eat();   // 抽象方法
+    public void drink() {         // 普通方法
+        System.out.println(name + "在喝水");
+    }
+}
+```
+
+> 案例：[test4](src/main/java/ooppolymorphic/test4/Animal.java)（Animal 抽象类，既有抽象方法 eat 又有普通方法 drink）
+
+### 子类实现抽象方法
+继承抽象类后，必须把所有抽象方法都实现，否则编译报错。
+
+```java
+public class Circle extends Shape {
+    @Override
+    public double getPerimeter() {  // 必须实现
+        return 2 * PI * radius;
+    }
+    @Override
+    public double getArea() {       // 必须实现
+        return PI * radius * radius;
+    }
+    @Override
+    public String getType() {       // 必须实现
+        return "圆";
+    }
+}
+```
+
+### 抽象类和多态结合
+抽象类引用可以指向子类对象，调用抽象方法时执行子类的实现。
+
+```java
+// 方法参数用抽象类 Shape，能接收 Circle、Rectangle 等所有子类
+public void useShape(Shape shape) {
+    System.out.println("图形: " + shape.getType());
+    System.out.println("周长: " + shape.getPerimeter());
+    System.out.println("面积: " + shape.getArea());
+}
+
+// 调用时传任意子类
+student.useShape(new Rectangle(5, 3));
+student.useShape(new Circle(3));
+```
+
+> 💡 这是抽象类最常用的场景：**定义规范 + 多态调用**。调用方只关心抽象类定义的方法，不关心具体是哪个子类。
+
+### 抽象类 vs 普通类
+
+| | 普通类 | 抽象类 |
+|---|-------|-------|
+| 实例化 | ✅ 可以 new | ❌ 不能 new |
+| 抽象方法 | ❌ 不能有 | ✅ 可以有 |
+| 普通方法/属性 | ✅ 有 | ✅ 有 |
+| 构造方法 | ✅ 有 | ✅ 有（子类通过 super 调用） |
+| 用途 | 创建对象 | 作为模板，约束子类必须实现的方法 |
+
+### 易错点汇总
+1. ❌ **抽象类 new 对象**——`new Shape()` 直接编译报错，抽象类是模板不能实例化
+2. ❌ **抽象方法有方法体**——`public abstract void eat() {}` 报错，抽象方法只能分号结尾
+3. ❌ **子类不实现抽象方法**——继承抽象类后必须实现所有抽象方法，否则子类也得声明为 abstract
+4. ❌ **有抽象方法的类没加 abstract**——类里有抽象方法，类必须声明为 `abstract class`
+5. 💡 **抽象类的构造方法是给子类用的**——虽然抽象类不能 new，但子类构造时会通过 `super()` 调用父类构造初始化属性
+6. 💡 **抽象类里可以没有抽象方法**——`abstract class` 里全是普通方法也合法，只是这样的类不能实例化（少见用法）
